@@ -6,9 +6,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
-import org.telegram.telegrambots.meta.generics.BotOptions;
-import org.telegram.telegrambots.meta.generics.LongPollingBot;
+
 
 import java.awt.*;
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.List;
 public class MailingBot extends TelegramLongPollingBot {
 
     private String botToken;
-
     private String botName;
 
     private final UpdateHandler updateHandler;
@@ -26,16 +23,16 @@ public class MailingBot extends TelegramLongPollingBot {
                      @Value("${bot.token}") String botToken,
                      UpdateHandler updateHandler
     ) {
-//        super(botToken);
-        this.botName = botName;
+        super(botToken);
         this.botToken = botToken;
+        this.botName = botName;
         this.updateHandler = updateHandler;
     }
 
 
     @Override
     public void onUpdateReceived(Update update) {
-        SendMessage message = updateHandler.handleUpdate(update);
+        SendMessage message = updateHandler.handleUpdate(update, this);
 
         try {
             execute(message);

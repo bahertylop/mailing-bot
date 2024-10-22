@@ -23,10 +23,8 @@ public class AccountDto {
     @NotNull(message = "chatId не может быть пустым")
     private Long chatId;
 
-    @NotBlank(message = "userName не может быть пустым")
     private String userName;
 
-    @NotBlank(message = "name не может быть пустым")
     private String name;
 
     @NotNull(message = "startTime не может быть пустым")
