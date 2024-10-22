@@ -6,6 +6,7 @@ import org.mailingbot.model.Admin;
 import org.mailingbot.service.AccountService;
 import org.mailingbot.service.AdminService;
 import org.mailingbot.service.MessageSender;
+import org.mailingbot.util.KeyBoards;
 import org.mailingbot.util.ReplyConstants;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -37,6 +38,10 @@ public class UpdateHandler {
         Long chatId = message.getChatId();
         String text = message.getText();
 
+        if (text == null) {
+            return new SendMessage(chatId.toString(), "Пожалуйста, отправьте текстовое сообщение. ");
+        }
+
         Optional<AdminDto> adminOp = adminService.getAdminDtoByChatId(chatId);
 
         SendMessage replyMessage = new SendMessage();
@@ -44,41 +49,43 @@ public class UpdateHandler {
 
         if (adminOp.isPresent()) {
             AdminDto admin = adminOp.get();
+            Admin.BotStage newStage;
             switch (text) {
                 case "/start" -> {
-//                    accountService.registerNewAccount(message);
                     replyMessage.setText(ReplyConstants.START_MESSAGE_ADMIN);
+                    newStage = Admin.BotStage.DEFAULT;
                 }
                 case "/newMessage" -> {
                     if (admin.getBotStage().equals(Admin.BotStage.DEFAULT)) {
-                        adminService.changeStage(chatId, Admin.BotStage.MESSAGE);
-                        replyMessage.setText("Отправьте сообщение для рассылки.");
+                        newStage = Admin.BotStage.MESSAGE;
+                        replyMessage.setText(ReplyConstants.NEW_MESSAGE_COMMAND_REPLY);
                     } else {
-                        adminService.changeStage(chatId, Admin.BotStage.DEFAULT);
-                        replyMessage.setText("Неправильно введена команда");
+                        newStage = Admin.BotStage.DEFAULT;
+                        replyMessage.setText(ReplyConstants.WRONG_COMMAND_REPLY);
                     }
                 }
                 case "/confirmMessage" -> {
                     if (admin.getBotStage().equals(Admin.BotStage.CONFIRM)) {
                         messageSender.sendMessageToAllUsers(admin.getMessage(), bot);
-                        replyMessage.setText("Сообщение отправлено");
-                        adminService.changeStage(chatId, Admin.BotStage.DEFAULT);
+                        replyMessage.setText(ReplyConstants.MESSAGE_SENDED_REPLY);
                     } else {
-                        adminService.changeStage(chatId, Admin.BotStage.DEFAULT);
-                        replyMessage.setText("Неправильно введена команда");
+                        replyMessage.setText(ReplyConstants.WRONG_COMMAND_REPLY);
                     }
+                    newStage = Admin.BotStage.DEFAULT;
                 }
                 default -> {
                     if (admin.getBotStage().equals(Admin.BotStage.MESSAGE)) {
-                        adminService.changeStage(chatId, Admin.BotStage.CONFIRM);
+                        newStage = Admin.BotStage.CONFIRM;
                         adminService.saveNewMessage(chatId, text);
-                        replyMessage.setText("подтвердите отправку: " + text);
+                        replyMessage.setText(ReplyConstants.MESSAGE_CONFIRM_REPLY + text);
                     } else {
-                        adminService.changeStage(chatId, Admin.BotStage.DEFAULT);
-                        replyMessage.setText("Неправильно введена команда");
+                        newStage = Admin.BotStage.DEFAULT;
+                        replyMessage.setText(ReplyConstants.WRONG_COMMAND_REPLY);
                     }
                 }
             }
+            adminService.changeStage(chatId, newStage);
+            replyMessage.setReplyMarkup(KeyBoards.chooseKeyboardByStage(newStage));
         } else {
             if (text.equals("/start")) {
                 accountService.registerNewAccount(message);

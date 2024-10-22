@@ -23,8 +23,12 @@ public class MessageSender {
         for (AccountDto user : usersForMailing) {
             try {
                 bot.execute(new SendMessage(user.getChatId().toString(), message));
+                Thread.sleep(100);
             } catch (TelegramApiException e) {
                 System.out.println("Не получилось отправить сообщение. ");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
             }
         }
     }
