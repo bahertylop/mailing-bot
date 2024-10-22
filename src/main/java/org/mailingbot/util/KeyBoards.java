@@ -21,6 +21,7 @@ public class KeyBoards {
         KeyboardRow row1 = new KeyboardRow();
         if (stage.equals(Admin.BotStage.DEFAULT)) {
             row1.add(new KeyboardButton("/newMessage"));
+            row1.add(new KeyboardButton("/users"));
         } else if (stage.equals(Admin.BotStage.CONFIRM)) {
             row1.add(new KeyboardButton("/confirmMessage"));
         }

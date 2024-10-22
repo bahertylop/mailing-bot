@@ -1,5 +1,9 @@
 package org.mailingbot.util;
 
+import org.mailingbot.dto.AccountDto;
+
+import java.util.List;
+
 public class ReplyConstants {
 
     public static final String START_MESSAGE_USER = "Вы подписаны на рассылку сообщений. ";
@@ -16,5 +20,13 @@ public class ReplyConstants {
 
     public static final String MESSAGE_CONFIRM_REPLY = "Подтвердите отправку сообщения: ";
 
+    public static String usersListMessage(List<AccountDto> accounts) {
+        StringBuilder res = new StringBuilder("Список получателей: \n");
+        for (AccountDto account : accounts) {
+            res.append(String.format("@%s \n", account.getUserName()));
+        }
 
+        return res.toString();
+
+    }
 }

@@ -74,6 +74,14 @@ public class UpdateHandler {
                     }
                     newStage = Admin.BotStage.DEFAULT;
                 }
+                case "/users" -> {
+                    if (admin.getBotStage().equals(Admin.BotStage.DEFAULT)) {
+                        replyMessage.setText(ReplyConstants.usersListMessage(accountService.getAllUsers()));
+                    } else {
+                        replyMessage.setText(ReplyConstants.WRONG_COMMAND_REPLY);
+                    }
+                    newStage = Admin.BotStage.DEFAULT;
+                }
                 default -> {
                     if (admin.getBotStage().equals(Admin.BotStage.MESSAGE)) {
                         newStage = Admin.BotStage.CONFIRM;
