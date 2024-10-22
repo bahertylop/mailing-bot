@@ -35,9 +35,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void saveNewMessage(Long chatId, String message) {
+    public void saveNewMessage(Long chatId, Integer messageId) {
         Admin admin = getAdminOrThrow(chatId);
-        admin.setMessage(message);
+        admin.setMessageId(messageId);
         saveAdmin(admin);
     }
 

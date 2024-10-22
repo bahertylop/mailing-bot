@@ -24,7 +24,7 @@ public class Admin {
 
     private BotStage botStage;
 
-    private String message;
+    private Integer messageId;
 
     public enum BotStage {
         DEFAULT,

@@ -39,7 +39,8 @@ public class UpdateHandler {
         String text = message.getText();
 
         if (text == null) {
-            return new SendMessage(chatId.toString(), "Пожалуйста, отправьте текстовое сообщение. ");
+            text = "";
+//            return new SendMessage(chatId.toString(), "Пожалуйста, отправьте текстовое сообщение. ");
         }
 
         Optional<AdminDto> adminOp = adminService.getAdminDtoByChatId(chatId);
@@ -66,7 +67,7 @@ public class UpdateHandler {
                 }
                 case "/confirmMessage" -> {
                     if (admin.getBotStage().equals(Admin.BotStage.CONFIRM)) {
-                        messageSender.sendMessageToAllUsers(admin.getMessage(), bot);
+                        messageSender.copyMessageAndSendToAllUsers(admin.getChatId(), admin.getMessageId(), bot);
                         replyMessage.setText(ReplyConstants.MESSAGE_SENDED_REPLY);
                     } else {
                         replyMessage.setText(ReplyConstants.WRONG_COMMAND_REPLY);
@@ -76,7 +77,7 @@ public class UpdateHandler {
                 default -> {
                     if (admin.getBotStage().equals(Admin.BotStage.MESSAGE)) {
                         newStage = Admin.BotStage.CONFIRM;
-                        adminService.saveNewMessage(chatId, text);
+                        adminService.saveNewMessage(chatId, message.getMessageId());
                         replyMessage.setText(ReplyConstants.MESSAGE_CONFIRM_REPLY + text);
                     } else {
                         newStage = Admin.BotStage.DEFAULT;

@@ -14,5 +14,5 @@ public interface AdminService {
 
     void changeStage(Long chatId, Admin.BotStage stage);
 
-    void saveNewMessage(Long chatId, String message);
+    void saveNewMessage(Long chatId, Integer messageId);
 }

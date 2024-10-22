@@ -25,15 +25,14 @@ public class AdminDto {
     @NotNull(message = "botStage не может быть пустым")
     private Admin.BotStage botStage;
 
-    @NotBlank(message = "message не может быть пустым")
-    private String message;
+    private Integer messageId;
 
     public static AdminDto from(Admin admin) {
         return AdminDto.builder()
                 .id(admin.getId())
                 .chatId(admin.getChatId())
                 .botStage(admin.getBotStage())
-                .message(admin.getMessage())
+                .messageId(admin.getMessageId())
                 .build();
     }
 
