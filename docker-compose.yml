@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=jdbc:postgresql://db:5432/mailing_bot_project
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=agroycg592:ggg
+    ports:
+      - "8080:8080"
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: mailing_bot_project
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: agroycg592:ggg
+    ports:
+      - "5431:5432"
