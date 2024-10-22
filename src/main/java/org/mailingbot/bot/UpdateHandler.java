@@ -67,8 +67,12 @@ public class UpdateHandler {
                 }
                 case "/confirmMessage" -> {
                     if (admin.getBotStage().equals(Admin.BotStage.CONFIRM)) {
-                        messageSender.copyMessageAndSendToAllUsers(admin.getChatId(), admin.getMessageId(), bot);
-                        replyMessage.setText(ReplyConstants.MESSAGE_SENDED_REPLY);
+                        boolean res = messageSender.copyMessageAndSendToAllUsers(admin.getChatId(), admin.getMessageId(), bot);
+                        if (res) {
+                            replyMessage.setText(ReplyConstants.MESSAGE_SENDED_REPLY);
+                        } else {
+                            replyMessage.setText(ReplyConstants.MESSAGE_NOT_SENDED_REPLY);
+                        }
                     } else {
                         replyMessage.setText(ReplyConstants.WRONG_COMMAND_REPLY);
                     }

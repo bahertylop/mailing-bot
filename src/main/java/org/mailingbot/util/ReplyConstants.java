@@ -18,7 +18,10 @@ public class ReplyConstants {
 
     public static final String MESSAGE_SENDED_REPLY = "Сообщение отправлено. ";
 
+    public static final String MESSAGE_NOT_SENDED_REPLY = "Не получилось отправить сообщение. ";
+
     public static final String MESSAGE_CONFIRM_REPLY = "Подтвердите отправку сообщения: ";
+
 
     public static String usersListMessage(List<AccountDto> accounts) {
         StringBuilder res = new StringBuilder("Список получателей: \n");

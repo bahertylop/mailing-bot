@@ -32,7 +32,7 @@ public class MessageSender {
         }
     }
 
-    public void copyMessageAndSendToAllUsers(Long chatIdFrom, Integer messageId, MailingBot bot) {
+    public boolean copyMessageAndSendToAllUsers(Long chatIdFrom, Integer messageId, MailingBot bot) {
         List<AccountDto> usersForMailing = accountService.getAllUsers();
 
         CopyMessage copyMessage = new CopyMessage();
@@ -40,11 +40,13 @@ public class MessageSender {
         copyMessage.setFromChatId(chatIdFrom);
         copyMessage.setMessageId(messageId);
 
+        int count = 0;
         for (AccountDto user : usersForMailing) {
             try {
                 copyMessage.setChatId(user.getChatId());
 
                 bot.execute(copyMessage);
+                count++;
                 Thread.sleep(100);
             } catch (TelegramApiException e) {
                 System.out.println("Не получилось отправить сообщение. ");
@@ -53,5 +55,7 @@ public class MessageSender {
                 throw new RuntimeException(e);
             }
         }
+
+        return count == usersForMailing.size();
     }
 }
